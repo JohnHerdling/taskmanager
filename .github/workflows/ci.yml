@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,3 +24,17 @@ jobs:
 
       - name: Run Jest tests
         run: npm test
+
+deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy container with Docker Compose
+        run: |
+          docker compose down || true
+          docker compose up -d
+
